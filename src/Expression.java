@@ -1,33 +1,43 @@
+/** Getting operands and operator from ReadConsole. Number systems check. */
+
 import java.io.IOException;
-import java.util.Arrays;
 
 public class Expression {
-    private Number firstOperand;
-    private Number secondOperand;
-    private String operator;
+    private final Number firstOperand;
+    private final Number secondOperand;
+    private final String operator;
 
     String [] splitExpression;
-
     {
         try {
             splitExpression = ReadConsole.read();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new NumberFormatException(e.getMessage());
         }
     }
     Expression(){
-        firstOperand = new Number().takeNumber(splitExpression[0]);
-        secondOperand = new Number().takeNumber(splitExpression[2]);
-
+        firstOperand = new Number().checkNumber(splitExpression[0]);
+        secondOperand = new Number().checkNumber(splitExpression[2]);
+        operator = new CheckOperators().check(splitExpression[1]);
     }
 
-    @Override
-    public String toString() {
-        return "Expression{" +
-                "firstOperand=" + firstOperand +
-                ", secondOperand=" + secondOperand +
-                ", operator='" + operator + '\'' +
-                ", splitExpression=" + Arrays.toString(splitExpression) +
-                '}';
+    boolean isArabianNumbers(){
+        if(firstOperand.isRoman() != secondOperand.isRoman()){
+            throw new NumberFormatException("Вы используете разные системы счисления одновременно");
+        }
+        return !firstOperand.isRoman() && !secondOperand.isRoman();
+    }
+
+
+    public Number getFirstOperand() {
+        return firstOperand;
+    }
+
+    public Number getSecondOperand() {
+        return secondOperand;
+    }
+
+    public String getOperator() {
+        return operator;
     }
 }
